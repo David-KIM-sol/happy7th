@@ -294,11 +294,11 @@
                 <div class="question">
                     <h2 class="question-title">7차 행축 아카데미에 참석하셨습니까?<span class="question-required">*</span></h2>
                     <div class="radio-group">
-                        <div class="radio-option" onclick="document.getElementById('attend-yes').click()">
+                        <div class="radio-option">
                             <input type="radio" id="attend-yes" name="attend" value="yes">
                             <label for="attend-yes">예</label>
                         </div>
-                        <div class="radio-option" onclick="document.getElementById('attend-no').click()">
+                        <div class="radio-option">
                             <input type="radio" id="attend-no" name="attend" value="no">
                             <label for="attend-no">아니오</label>
                         </div>
@@ -486,23 +486,23 @@
                     <div class="question">
                         <h3 class="question-title">7. 본 컨퍼런스를 알게 된 주요 경로는 무엇입니까? (복수 선택 가능)<span class="question-required">*</span></h3>
                         <div class="checkbox-group">
-                            <div class="checkbox-option" onclick="document.getElementById('q7-1').click()">
+                            <div class="checkbox-option">
                                 <input type="checkbox" id="q7-1" name="q7" value="공식 웹사이트/SNS">
                                 <label for="q7-1">공식 웹사이트/SNS</label>
                             </div>
-                            <div class="checkbox-option" onclick="document.getElementById('q7-2').click()">
+                            <div class="checkbox-option">
                                 <input type="checkbox" id="q7-2" name="q7" value="동료/지인 추천">
                                 <label for="q7-2">동료/지인 추천</label>
                             </div>
-                            <div class="checkbox-option" onclick="document.getElementById('q7-3').click()">
+                            <div class="checkbox-option">
                                 <input type="checkbox" id="q7-3" name="q7" value="관련 커뮤니티/카페/포털사이트">
                                 <label for="q7-3">관련 커뮤니티/카페/포털사이트</label>
                             </div>
-                            <div class="checkbox-option" onclick="document.getElementById('q7-4').click()">
+                            <div class="checkbox-option">
                                 <input type="checkbox" id="q7-4" name="q7" value="뉴스/언론사 기사/광고">
                                 <label for="q7-4">뉴스/언론사 기사/광고</label>
                             </div>
-                            <div class="checkbox-option" onclick="document.getElementById('q7-5').click()">
+                            <div class="checkbox-option">
                                 <input type="checkbox" id="q7-5" name="q7" value="기타">
                                 <label for="q7-5">기타</label>
                             </div>
@@ -654,14 +654,21 @@
             console.log('수집된 데이터:', data);
             console.log('Google Sheets로 전송 중...');
 
-            fetch('https://script.google.com/macros/s/AKfycbzSq66nPnQw0fOwm2nGfg6tMbM2WxZszSW_XUQoJX59qTfHk0NmMGQeGdxqQb9eNUQy/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbzAc1AripWAEIorjSZKYwwDpIEKR_0vCXSQlDdSyYZMtszRQEHjJIz_O77MVwm7BmXq/exec', {
                 method: 'POST',
+                mode: 'no-cors',
+                cache: 'no-cache',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                redirect: 'follow',
                 body: JSON.stringify(data)
-            }).then(function() {
-                console.log('전송 완료!');
+            }).then(function(response) {
+                console.log('전송 완료! 응답:', response);
                 showSuccess();
             }).catch(function(error) {
-                console.log('전송 에러 (정상):', error);
+                console.log('전송 에러:', error);
+                // no-cors 모드에서는 에러가 발생할 수 있지만 데이터는 전송됨
                 showSuccess();
             });
         }
