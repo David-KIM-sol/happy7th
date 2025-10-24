@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7차 행축 아카데미 설문조사</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .question {
+            margin-bottom: 35px;
+        }
+
+        .question-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .question-required {
+            color: #e74c3c;
+            margin-left: 5px;
+        }
+
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .radio-option, .checkbox-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option:hover, .checkbox-option:hover {
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+
+        .radio-option input[type="radio"],
+        .checkbox-option input[type="checkbox"] {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .radio-option label,
+        .checkbox-option label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .scale-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .scale-option {
+            flex: 1;
+            text-align: center;
+        }
+
+        .scale-option input[type="radio"] {
+            display: none;
+        }
+
+        .scale-option label {
+            display: block;
+            padding: 15px 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .scale-option input[type="radio"]:checked + label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .scale-option label:hover {
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 15px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-message h2 {
+            color: #27ae60;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .success-message p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .download-link {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #27ae60;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .download-link:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .no-access {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .no-access h2 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .no-access p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .scale-group {
+                flex-direction: column;
+            }
+
+            .scale-option {
+                width: 100%;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>7차 행축 아카데미 설문조사</h1>
+            <p>여러분의 소중한 의견을 들려주세요</p>
+        </div>
+
+        <div class="content">
+            <!-- 초기 스크리닝 페이지 -->
+            <div id="page1" class="page active">
+                <div class="question">
+                    <h2 class="question-title">7차 행축 아카데미에 참석하셨습니까?<span class="question-required">*</span></h2>
+                    <div class="radio-group">
+                        <div class="radio-option" onclick="document.getElementById('attend-yes').click()">
+                            <input type="radio" id="attend-yes" name="attend" value="yes">
+                            <label for="attend-yes">예</label>
+                        </div>
+                        <div class="radio-option" onclick="document.getElementById('attend-no').click()">
+                            <input type="radio" id="attend-no" name="attend" value="no">
+                            <label for="attend-no">아니오</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="goToSurvey()">다음</button>
+                </div>
+            </div>
+
+            <!-- 불참자 페이지 -->
+            <div id="page-no" class="page">
+                <div class="no-access">
+                    <h2>죄송합니다</h2>
+                    <p>본 설문은 7차 행축 아카데미 참석자만 응답하실 수 있습니다.</p>
+                    <p>다음 기회에 함께할 수 있기를 바랍니다.</p>
+                </div>
+            </div>
+
+            <!-- 본 설문 페이지 -->
+            <div id="page2" class="page">
+                <form id="surveyForm">
+                    <!-- Q1 -->
+                    <div class="question">
+                        <h3 class="question-title">1. 이번 컨퍼런스의 전체적인 만족도는 어떠셨나요?<span class="question-required">*</span></h3>
+                        <div class="scale-group">
+                            <div class="scale-option">
+                                <input type="radio" id="q1-1" name="q1" value="1" required>
+                                <label for="q1-1">1</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q1-2" name="q1" value="2">
+                                <label for="q1-2">2</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q1-3" name="q1" value="3">
+                                <label for="q1-3">3</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q1-4" name="q1" value="4">
+                                <label for="q1-4">4</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q1-5" name="q1" value="5">
+                                <label for="q1-5">5</label>
+                            </div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>매우 불만족</span>
+                            <span>매우 만족</span>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="question">
+                        <h3 class="question-title">2. 이번 컨퍼런스의 강의 내용에 대해 얼마나 만족하셨나요?<span class="question-required">*</span></h3>
+                        <div class="scale-group">
+                            <div class="scale-option">
+                                <input type="radio" id="q2-1" name="q2" value="1" required>
+                                <label for="q2-1">1</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q2-2" name="q2" value="2">
+                                <label for="q2-2">2</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q2-3" name="q2" value="3">
+                                <label for="q2-3">3</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q2-4" name="q2" value="4">
+                                <label for="q2-4">4</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q2-5" name="q2" value="5">
+                                <label for="q2-5">5</label>
+                            </div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>매우 불만족</span>
+                            <span>매우 만족</span>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="question">
+                        <h3 class="question-title">3. 이번 컨퍼런스의 진행일정(2박3일)과 장소는 얼마나 만족하셨나요?<span class="question-required">*</span></h3>
+                        <div class="scale-group">
+                            <div class="scale-option">
+                                <input type="radio" id="q3-1" name="q3" value="1" required>
+                                <label for="q3-1">1</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q3-2" name="q3" value="2">
+                                <label for="q3-2">2</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q3-3" name="q3" value="3">
+                                <label for="q3-3">3</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q3-4" name="q3" value="4">
+                                <label for="q3-4">4</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q3-5" name="q3" value="5">
+                                <label for="q3-5">5</label>
+                            </div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>매우 불만족</span>
+                            <span>매우 만족</span>
+                        </div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="question">
+                        <h3 class="question-title">4. 이번 컨퍼런스의 내용이 사역에 얼마나 실질적인 도움을 줄 것이라고 예상하시나요?<span class="question-required">*</span></h3>
+                        <div class="scale-group">
+                            <div class="scale-option">
+                                <input type="radio" id="q4-1" name="q4" value="1" required>
+                                <label for="q4-1">1</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q4-2" name="q4" value="2">
+                                <label for="q4-2">2</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q4-3" name="q4" value="3">
+                                <label for="q4-3">3</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q4-4" name="q4" value="4">
+                                <label for="q4-4">4</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q4-5" name="q4" value="5">
+                                <label for="q4-5">5</label>
+                            </div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>전혀 도움 안 됨</span>
+                            <span>매우 도움 됨</span>
+                        </div>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="question">
+                        <h3 class="question-title">5. 유익하거나 흥미로웠던 세션(강의)는 무엇이었으며, 그 이유는 무엇인가요?<span class="question-required">*</span></h3>
+                        <textarea name="q5" placeholder="자유롭게 의견을 작성해주세요" required></textarea>
+                    </div>
+
+                    <!-- Q6 -->
+                    <div class="question">
+                        <h3 class="question-title">6. 다른 참석자(사역자)와 교류할 수 있는 네트워킹 기회가 충분히 제공되었나요?<span class="question-required">*</span></h3>
+                        <div class="scale-group">
+                            <div class="scale-option">
+                                <input type="radio" id="q6-1" name="q6" value="1" required>
+                                <label for="q6-1">1</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q6-2" name="q6" value="2">
+                                <label for="q6-2">2</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q6-3" name="q6" value="3">
+                                <label for="q6-3">3</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q6-4" name="q6" value="4">
+                                <label for="q6-4">4</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q6-5" name="q6" value="5">
+                                <label for="q6-5">5</label>
+                            </div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>매우 부족함</span>
+                            <span>매우 충분함</span>
+                        </div>
+                    </div>
+
+                    <!-- Q7 -->
+                    <div class="question">
+                        <h3 class="question-title">7. 본 컨퍼런스를 알게 된 주요 경로는 무엇입니까? (복수 선택 가능)<span class="question-required">*</span></h3>
+                        <div class="checkbox-group">
+                            <div class="checkbox-option" onclick="document.getElementById('q7-1').click()">
+                                <input type="checkbox" id="q7-1" name="q7" value="공식 웹사이트/SNS">
+                                <label for="q7-1">공식 웹사이트/SNS</label>
+                            </div>
+                            <div class="checkbox-option" onclick="document.getElementById('q7-2').click()">
+                                <input type="checkbox" id="q7-2" name="q7" value="동료/지인 추천">
+                                <label for="q7-2">동료/지인 추천</label>
+                            </div>
+                            <div class="checkbox-option" onclick="document.getElementById('q7-3').click()">
+                                <input type="checkbox" id="q7-3" name="q7" value="관련 커뮤니티/카페/포털사이트">
+                                <label for="q7-3">관련 커뮤니티/카페/포털사이트</label>
+                            </div>
+                            <div class="checkbox-option" onclick="document.getElementById('q7-4').click()">
+                                <input type="checkbox" id="q7-4" name="q7" value="뉴스/언론사 기사/광고">
+                                <label for="q7-4">뉴스/언론사 기사/광고</label>
+                            </div>
+                            <div class="checkbox-option" onclick="document.getElementById('q7-5').click()">
+                                <input type="checkbox" id="q7-5" name="q7" value="기타">
+                                <label for="q7-5">기타</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q8 -->
+                    <div class="question">
+                        <h3 class="question-title">8. 이 컨퍼런스를 동료나 친구에게 추천할 의향은 어느 정도입니까?<span class="question-required">*</span></h3>
+                        <div class="scale-group">
+                            <div class="scale-option">
+                                <input type="radio" id="q8-1" name="q8" value="1" required>
+                                <label for="q8-1">1</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q8-2" name="q8" value="2">
+                                <label for="q8-2">2</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q8-3" name="q8" value="3">
+                                <label for="q8-3">3</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q8-4" name="q8" value="4">
+                                <label for="q8-4">4</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q8-5" name="q8" value="5">
+                                <label for="q8-5">5</label>
+                            </div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>전혀 추천 안 함</span>
+                            <span>적극 추천</span>
+                        </div>
+                    </div>
+
+                    <!-- Q9 -->
+                    <div class="question">
+                        <h3 class="question-title">9. 다음 원데이클래스(26년도 봄행축관련)에 참석할 의향은 어느 정도입니까?<span class="question-required">*</span></h3>
+                        <div class="scale-group">
+                            <div class="scale-option">
+                                <input type="radio" id="q9-1" name="q9" value="1" required>
+                                <label for="q9-1">1</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q9-2" name="q9" value="2">
+                                <label for="q9-2">2</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q9-3" name="q9" value="3">
+                                <label for="q9-3">3</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q9-4" name="q9" value="4">
+                                <label for="q9-4">4</label>
+                            </div>
+                            <div class="scale-option">
+                                <input type="radio" id="q9-5" name="q9" value="5">
+                                <label for="q9-5">5</label>
+                            </div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>전혀 없음</span>
+                            <span>매우 높음</span>
+                        </div>
+                    </div>
+
+                    <!-- Q10 -->
+                    <div class="question">
+                        <h3 class="question-title">10. 다음 컨퍼런스에서 다루었으면 하는 세션이나 개선이 필요하다고 생각하는 부분이 있다면 자유롭게 의견을 말씀해 주세요.</h3>
+                        <textarea name="q10" placeholder="자유롭게 의견을 작성해주세요"></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-secondary" onclick="goBack()">처음으로</button>
+                        <button type="button" class="btn-primary" onclick="submitForm()">제출하기</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 완료 페이지 -->
+            <div id="page3" class="page">
+                <div class="success-message">
+                    <h2>✓ 설문이 완료되었습니다!</h2>
+                    <p>소중한 의견 감사합니다.</p>
+                    <p>아래 링크에서 강의 자료를 다운로드하실 수 있습니다.</p>
+                    <a href="https://drive.google.com/file/d/16Qbt8sv6_mLkTK4d5B5Tu4Jyrig7dQau/view?usp=drive_link" class="download-link" target="_blank">강의 자료 다운로드</a>
+                    <br><br>
+                    <button type="button" class="btn-secondary" onclick="goBack()">처음으로 돌아가기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goToSurvey() {
+            var attend = document.querySelector('input[name="attend"]:checked');
+            if (!attend) {
+                alert('참석 여부를 선택해주세요.');
+                return;
+            }
+            
+            document.getElementById('page1').classList.remove('active');
+            
+            if (attend.value === 'yes') {
+                document.getElementById('page2').classList.add('active');
+            } else {
+                document.getElementById('page-no').classList.add('active');
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function goBack() {
+            var pages = document.querySelectorAll('.page');
+            pages.forEach(function(p) { p.classList.remove('active'); });
+            document.getElementById('page1').classList.add('active');
+            document.getElementById('surveyForm').reset();
+            document.querySelectorAll('input[name="attend"]').forEach(function(r) { r.checked = false; });
+            window.scrollTo(0, 0);
+        }
+
+        function submitForm() {
+            console.log('제출 시작!');
+            
+            var q7 = document.querySelectorAll('input[name="q7"]:checked');
+            if (q7.length === 0) {
+                alert('질문 7번의 경로를 최소 1개 이상 선택해주세요.');
+                return;
+            }
+
+            console.log('데이터 수집 중...');
+            var formData = new FormData(document.getElementById('surveyForm'));
+            var data = {};
+            
+            formData.forEach(function(value, key) {
+                if (key !== 'q7') {
+                    data[key] = value;
+                }
+            });
+            
+            var q7Values = [];
+            q7.forEach(function(cb) {
+                q7Values.push(cb.value);
+            });
+            data.q7 = q7Values.join(', ');
+            data.timestamp = new Date().toISOString();
+
+            console.log('수집된 데이터:', data);
+            console.log('Google Sheets로 전송 중...');
+
+            fetch('https://script.google.com/macros/s/AKfycbzSq66nPnQw0fOwm2nGfg6tMbM2WxZszSW_XUQoJX59qTfHk0NmMGQeGdxqQb9eNUQy/exec', {
+                method: 'POST',
+                body: JSON.stringify(data)
+            }).then(function() {
+                console.log('전송 완료!');
+                showSuccess();
+            }).catch(function(error) {
+                console.log('전송 에러 (정상):', error);
+                showSuccess();
+            });
+        }
+
+        function showSuccess() {
+            var pages = document.querySelectorAll('.page');
+            pages.forEach(function(p) { p.classList.remove('active'); });
+            document.getElementById('page3').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
